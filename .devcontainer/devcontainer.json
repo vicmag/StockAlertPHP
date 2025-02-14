@@ -12,9 +12,5 @@
     }
   },
   "postCreateCommand": "composer install",
-  //"remoteUser": "vscode"
-
   "remoteUser": "codespace"
 }
-
-

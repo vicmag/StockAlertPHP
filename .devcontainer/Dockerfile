@@ -1,27 +1,26 @@
-# Use an official PHP 8.2 base image
-FROM php:8.2-cli
+# Use an official PHP 8.2 development image from Microsoft Dev Containers
+FROM mcr.microsoft.com/devcontainers/php:8.2
 
-# Install system dependencies
+# Install system dependencies required for Phalcon
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     git \
     libpcre3-dev \
-    lsb-release \
-    ca-certificates \
-    apt-transport-https \
-    software-properties-common \
+    libssl-dev \
+    libxml2-dev \
+    libsqlite3-dev \
+    pkg-config \
+    build-essential \
+    re2c \
     && rm -rf /var/lib/apt/lists/*
 
-# Add Phalcon Repository
-RUN curl -fsSL https://packagecloud.io/gpg.key | gpg --dearmor -o /usr/share/keyrings/phalcon-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/phalcon-keyring.gpg] https://packagecloud.io/phalcon/stable/ubuntu $(lsb_release -cs) main" \
-    | tee /etc/apt/sources.list.d/phalcon.list
+# Install Phalcon via PECL
+RUN pecl channel-update pecl.php.net \
+    && pecl install phalcon \
+    && echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/30-phalcon.ini
 
-# Install PHP extensions and Phalcon
-RUN apt-get update && apt-get install -y php8.2-phalcon
-
-# Install Composer Manually
+# Install Composer manually
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install PHPUnit globally
