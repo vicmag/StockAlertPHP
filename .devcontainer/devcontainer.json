@@ -1,7 +1,7 @@
 {
   "name": "PHP 8 Development",
   //"dockerFile": "Dockerfile",
-  "image": "mcr.microsoft.com/devcontainers/php:1-8.2-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/php:8.3",
   "context": "..",
   "remoteUser": "codespace",
   "appPort": [8080],
