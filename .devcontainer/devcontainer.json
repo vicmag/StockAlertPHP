@@ -1,16 +1,23 @@
 {
-  "name": "PHP 8 Development",
-  //"dockerFile": "Dockerfile",
-  "image": "mcr.microsoft.com/devcontainers/php:8.3",
-  "context": "..",
-  "remoteUser": "codespace",
-  "appPort": [8080],
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
+  "name": "Phalcon TDD",
+  "build": {
+    "dockerfile": "Dockerfile"
   },
-  "extensions": [
-    "felixfbecker.php-pack",
-    "bmewburn.vscode-intelephense-client"
-  ],
-  "postCreateCommand": "composer install && ./vendor/bin/phpunit"
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/composer:2": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "junstyle.php-cs-fixer"
+      ]
+    }
+  },
+  "postCreateCommand": "composer install",
+  //"remoteUser": "vscode"
+  "remoteUser": "codespace"
 }
+
+
