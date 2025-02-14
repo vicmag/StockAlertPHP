@@ -3,10 +3,6 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/composer:2": {}
-  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -17,6 +13,7 @@
   },
   "postCreateCommand": "composer install",
   //"remoteUser": "vscode"
+
   "remoteUser": "codespace"
 }
 

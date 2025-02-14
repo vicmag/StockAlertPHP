@@ -1,6 +1,7 @@
-# Usar la imagen oficial de PHP 8
+# Use an official PHP 8.2 base image
 FROM php:8.2-cli
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -20,8 +21,8 @@ RUN curl -fsSL https://packagecloud.io/gpg.key | gpg --dearmor -o /usr/share/key
 # Install PHP extensions and Phalcon
 RUN apt-get update && apt-get install -y php8.2-phalcon
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install Composer Manually
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install PHPUnit globally
 RUN composer global require phpunit/phpunit:^10.0 --prefer-dist --no-progress --no-suggest
