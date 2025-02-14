@@ -1,0 +1,15 @@
+{
+  "name": "PHP 8 Development",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+  "remoteUser": "codespace",
+  "appPort": [8080],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+    "felixfbecker.php-pack",
+    "bmewburn.vscode-intelephense-client"
+  ],
+  "postCreateCommand": "composer install && ./vendor/bin/phpunit"
+}
