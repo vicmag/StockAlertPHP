@@ -4,14 +4,15 @@
   "type": "project",
   "license": "MIT",
   "require": {
-    "php": "^8.2"
+    "php": "^8.2",
+    "phalcon/phalcon": "^5.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.0"
   },
   "autoload": {
     "psr-4": {
-      "StoreManager\\": "src/"
+      "StoreManager\\": "app/"
     }
   },
   "autoload-dev": {
