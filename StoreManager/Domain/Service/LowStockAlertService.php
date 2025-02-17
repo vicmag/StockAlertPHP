@@ -15,7 +15,6 @@ class LowStockAlertService
 
     public function checkLowStock(string $productId): bool
     {
-        $product = $this->productRepository->findById($productId);
         return false;
     }
 }
