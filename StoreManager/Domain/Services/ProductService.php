@@ -16,7 +16,12 @@ class ProductService
 
     public function setMinimumStockLevel(int $productId, int $minimumStockLevel): bool
     {
-        return false;
-        // Implementación vacía para la fase Roja
+        $product = $this->productRepository->findById($productId);
+        if ($product === null) {
+            return false;
+        }
+
+        $product->setMinimumStockLevel($minimumStockLevel);
+        return $this->productRepository->save($product);
     }
 }
