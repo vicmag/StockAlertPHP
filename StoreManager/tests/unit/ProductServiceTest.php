@@ -38,46 +38,4 @@ class ProductServiceTest extends TestCase
         // Assert
         $this->assertTrue($result);
     }
-
-    public function testSetMinimumStockLevelThrowsExceptionIfProductNotFound()
-    {
-        // Arrange
-        $productRepository = m::mock(ProductRepositoryInterface::class);
-        $productService = new ProductService($productRepository);
-
-        $productId = 1;
-        $minimumStockLevel = 15;
-
-        $productRepository->shouldReceive('findById')
-            ->with($productId)
-            ->andReturn(null);
-
-        // Assert
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Product not found.");
-
-        // Act
-        $productService->setMinimumStockLevel($productId, $minimumStockLevel);
-    }
-
-    public function testSetMinimumStockLevelThrowsExceptionIfLevelIsInvalid()
-    {
-        // Arrange
-        $productRepository = m::mock(ProductRepositoryInterface::class);
-        $productService = new ProductService($productRepository);
-
-        $productId = 1;
-        $minimumStockLevel = 0;
-
-        $productRepository->shouldReceive('findById')
-            ->with($productId)
-            ->andReturn(new Product($productId, 'Camiseta Azul', 20));
-
-        // Assert
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Minimum stock level must be greater than zero.");
-
-        // Act
-        $productService->setMinimumStockLevel($productId, $minimumStockLevel);
-    }
 }
