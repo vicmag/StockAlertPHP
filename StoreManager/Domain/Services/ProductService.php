@@ -38,4 +38,10 @@ class ProductService
             throw new \InvalidArgumentException("Minimum stock level must be greater than zero.");
         }
     }
+
+    public function checkStockAndSendAlert(int $productId): bool
+    {
+        // Implementación vacía para la fase Roja
+        return false;
+    }
 }

@@ -61,4 +61,35 @@ class ProductServiceTest extends TestCase
         // Act
         $productService->setMinimumStockLevel($productId, $minimumStockLevel);
     }
+
+    // Nueva prueba para el Escenario 1 (Fase Roja)
+    public function testSendLowStockAlert()
+    {
+        // Arrange
+        $productRepository = m::mock(ProductRepositoryInterface::class);
+        $productService = new ProductService($productRepository);
+
+        $productId = 1;
+        $productName = "Camiseta Azul";
+        $currentStock = 5;
+        $minimumStockLevel = 10;
+
+        $product = new Product($productId, $productName, $currentStock);
+        $product->setMinimumStockLevel($minimumStockLevel);
+
+        $productRepository->shouldReceive('findById')
+            ->with($productId)
+            ->andReturn($product);
+
+        // Expectativas
+        $productRepository->shouldReceive('save')
+            ->with(m::type(Product::class))
+            ->andReturn(true);
+
+        // Act
+        $result = $productService->checkStockAndSendAlert($productId);
+
+        // Assert
+        $this->assertTrue($result);
+    }
 }
