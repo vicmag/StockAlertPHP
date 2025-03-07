@@ -18,7 +18,11 @@ class ProductService
     {
         $product = $this->productRepository->findById($productId);
         if ($product === null) {
-            return false;
+            throw new \InvalidArgumentException("Product not found.");
+        }
+
+        if ($minimumStockLevel <= 0) {
+            throw new \InvalidArgumentException("Minimum stock level must be greater than zero.");
         }
 
         $product->setMinimumStockLevel($minimumStockLevel);
