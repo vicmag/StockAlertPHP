@@ -15,6 +15,7 @@ class ProductServiceTest extends TestCase
         m::close();
     }
 
+    // Prueba existente (no se modifica)
     public function testSetMinimumStockLevel()
     {
         // Arrange
@@ -37,5 +38,27 @@ class ProductServiceTest extends TestCase
 
         // Assert
         $this->assertTrue($result);
+    }
+
+    // Nueva prueba (Fase Roja)
+    public function testSetMinimumStockLevelThrowsExceptionIfLevelIsInvalid()
+    {
+        // Arrange
+        $productRepository = m::mock(ProductRepositoryInterface::class);
+        $productService = new ProductService($productRepository);
+
+        $productId = 1;
+        $minimumStockLevel = 0; // Nivel inválido
+
+        $productRepository->shouldReceive('findById')
+            ->with($productId)
+            ->andReturn(new Product($productId, 'Camiseta Azul', 20));
+
+        // Assert
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Minimum stock level must be greater than zero.");
+
+        // Act
+        $productService->setMinimumStockLevel($productId, $minimumStockLevel);
     }
 }
