@@ -25,4 +25,9 @@ class Product
     {
         return $this->minimumStockLevel;
     }
+
+    public function getStock(): int
+    {
+        return $this->stock;
+    }
 }

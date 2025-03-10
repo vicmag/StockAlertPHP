@@ -41,7 +41,16 @@ class ProductService
 
     public function checkStockAndSendAlert(int $productId): bool
     {
-        // Implementación vacía para la fase Roja
+        $product = $this->productRepository->findById($productId);
+        if ($product === null) {
+            return false;
+        }
+
+        if ($product->getStock() <= $product->getMinimumStockLevel()) {
+            // Simulación de envío de alerta (implementación mínima)
+            return true;
+        }
+
         return false;
     }
 }
