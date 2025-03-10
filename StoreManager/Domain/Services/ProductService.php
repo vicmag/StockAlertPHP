@@ -41,16 +41,24 @@ class ProductService
 
     public function checkStockAndSendAlert(int $productId): bool
     {
-        $product = $this->productRepository->findById($productId);
-        if ($product === null) {
-            return false;
-        }
+        $product = $this->findProductOrFail($productId);
 
-        if ($product->getStock() <= $product->getMinimumStockLevel()) {
-            // Simulación de envío de alerta (implementación mínima)
-            return true;
+        if ($this->isStockBelowMinimum($product)) {
+            return $this->sendLowStockAlert($product);
         }
 
         return false;
     }
+
+    private function isStockBelowMinimum(Product $product): bool
+    {
+        return $product->getStock() <= $product->getMinimumStockLevel();
+    }
+
+    private function sendLowStockAlert(Product $product): bool
+    {
+        // Simulación de envío de alerta (implementación mínima)
+        return true;
+    }
+
 }
