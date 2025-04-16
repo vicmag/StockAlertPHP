@@ -6,7 +6,8 @@ use StoreManager\Domain\Models\Product;
 
 class ProductService
 {
-    private ProductRepositoryInterface $productRepository;
+    /** @var ProductRepositoryInterface */
+    private $productRepository;
     
     public function __construct(ProductRepositoryInterface $productRepository) 
     {
@@ -15,13 +16,25 @@ class ProductService
     
     public function increaseStock(string $productName, int $amount): bool
     {
-        // 1. Buscar el producto
-        $product = $this->productRepository->findByName($productName);
-
-        // 2. Incrementar el stock
+        $product = $this->findProductByName($productName);
+        $this->updateStock($product, $amount);
+        
+        return $this->saveProduct($product);
+    }
+    
+    private function findProductByName(string $name): Product
+    {
+        return $this->productRepository->findByName($name);
+    }
+    
+    private function updateStock(Product $product, int $amount): void
+    {
         $product->stock += $amount;
-
-        // 3. Guardar los cambios
+    }
+    
+    private function saveProduct(Product $product): bool
+    {
         return $this->productRepository->save($product);
     }
 }
+?>
