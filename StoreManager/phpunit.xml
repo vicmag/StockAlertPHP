@@ -8,4 +8,17 @@
     <php>
         <env name="APP_ENV" value="testing"/>
     </php>
+    <coverage>
+        <include>
+            <directory>Application</directory>
+            <directory>Domain</directory>
+        </include>
+        <exclude>
+            <directory>Tests</directory>
+            <directory>vendor</directory>
+        </exclude>
+        <report>
+            <html outputDirectory="coverage"/>
+        </report>
+    </coverage>
 </phpunit>
