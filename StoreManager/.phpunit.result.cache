@@ -1,0 +1,1 @@
+{"version":1,"defects":{"StoreManager\\Tests\\Unit\\ProductServiceTest::testIncreaseStockShouldIncrementProductStock":8},"times":{"StoreManager\\Tests\\Unit\\ProductServiceTest::testIncreaseStockShouldIncrementProductStock":0.015}}

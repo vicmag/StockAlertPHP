@@ -1,5 +1,5 @@
 {
-    "name": "yourname/phalcon-tdd",
+    "name": "store-manager/phalcon-tdd",
     "description": "Phalcon TDD environment",
     "require": {
         "php": "^8.2",
@@ -8,7 +8,8 @@
         "monolog/monolog": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "mockery/mockery": "^1.5"
     },
     "autoload": {
         "psr-4": {
@@ -19,7 +20,7 @@
         "psr-4": {
             "StoreManager\\Tests\\": "Tests/"
         }
-    }
+    },
     "config": {
         "platform": {
             "php": "8.2"
