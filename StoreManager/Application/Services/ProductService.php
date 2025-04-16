@@ -15,6 +15,13 @@ class ProductService
     
     public function increaseStock(string $productName, int $amount): bool
     {
-        throw new \RuntimeException('Not implemented yet');
+        // 1. Buscar el producto
+        $product = $this->productRepository->findByName($productName);
+
+        // 2. Incrementar el stock
+        $product->stock += $amount;
+
+        // 3. Guardar los cambios
+        return $this->productRepository->save($product);
     }
 }
