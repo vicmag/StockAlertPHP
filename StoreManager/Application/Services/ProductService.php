@@ -14,8 +14,9 @@ class ProductService
 
     public function increaseStock(string $productName, int $incrementAmount): bool
     {
-        // Implementación vacia. Fase Roja
-        throw new \Exception("No implementado. Fase Roja");
+        $product = $this->productRepository->findByName($productName);
+        $product->stock += $incrementAmount;
+        return $this->productRepository->save($product);
     }
 
 
