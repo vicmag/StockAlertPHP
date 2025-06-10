@@ -8,34 +8,43 @@ use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Application\Services\ProductService;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 class ProductServiceTest extends TestCase
 {
-    public function testIncreaseStockShouldIncrementProductStock()
+    use MockeryPHPUnitIntegration;
+
+    public function testCuandoIncrementoElStockDeUnProducto_EntoncesElStockAumenta()
     {
-        // Arrange
+        //Arrange (configuración)
         $productName = 'Camiseta';
         $initialStock = 10;
         $incrementAmount = 5;
-        
+
         $mockProduct = new Product();
         $mockProduct->name = $productName;
         $mockProduct->stock = $initialStock;
-        
-        $mockRepo = Mockery::mock(ProductRepositoryInterface::class);
-        $mockRepo->shouldReceive('findByName')
+
+        $mockProductRepository = Mockery::mock(ProductRepositoryInterface::class);
+        $mockProductRepository->shouldReceive('findByName')
             ->with($productName)
             ->once()
             ->andReturn($mockProduct);
-            
-        $mockRepo->shouldReceive('save')
-            ->with(Mockery::on(fn($product) => $product->stock === 15))
+
+        $mockProductRepository->shouldReceive('save')
+            ->with(Mockery::on(function ($product) use ($initialStock, $incrementAmount) {
+                return $product->stock === ($initialStock + $incrementAmount);
+            }))
             ->once()
             ->andReturn(true);
-        
-        $service = new ProductService($mockRepo);
 
-        // Act & Assert
-        $this->assertTrue($service->increaseStock($productName, $incrementAmount));
+        $service = new ProductService($mockProductRepository);
+
+        //Act (ejecución)
+        $result = $service->increaseStock($productName, $incrementAmount);
+
+        //Assert (validación)
+        $this->assertTrue($result);
+        Mockery::close();
     }
 }
