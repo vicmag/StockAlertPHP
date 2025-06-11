@@ -14,6 +14,7 @@ class ProductServiceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    //Happy path
     public function testCuandoIncrementoElStockDeUnProducto_EntoncesElStockAumenta()
     {
         //Arrange (configuración)
@@ -47,4 +48,6 @@ class ProductServiceTest extends TestCase
         $this->assertTrue($result);
         Mockery::close();
     }
+
+    
 }
