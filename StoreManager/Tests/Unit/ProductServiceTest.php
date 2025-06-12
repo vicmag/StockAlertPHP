@@ -6,6 +6,7 @@ namespace StoreManager\Tests\Unit;
 use StoreManager\Domain\Models\Product;
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Application\Services\ProductService;
+use StoreManager\Domain\Exceptions\ProductNotFoundException;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -47,6 +48,29 @@ class ProductServiceTest extends TestCase
         //Assert (validación)
         $this->assertTrue($result);
         Mockery::close();
+    }
+
+    //Fallo al encontrar el producto
+    public function testCuandoNoEncuentroElProducto_EntoncesNoSeIncrementaElStock()
+    {
+        //Arrange (configuración)
+        $productName = 'Camiseta';
+        $incrementAmount = 5;
+
+        $mockProductRepository = Mockery::mock(ProductRepositoryInterface::class);
+        $mockProductRepository->shouldReceive('findByName')
+            ->with($productName)
+            ->once()
+            ->andReturn(null);
+
+        $service = new ProductService($mockProductRepository);
+        //Expect
+        $this->expectException(ProductNotFoundException::class);
+
+        //Act (ejecución)
+        $service->increaseStock($productName, $incrementAmount);
+        
+        
     }
 
     
