@@ -3,6 +3,7 @@ namespace StoreManager\Domain\Services;
 
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Models\Product;
+use StoreManager\Domain\Exceptions\ProductNotFoundException
 
 class ProductService
 {
@@ -32,7 +33,11 @@ class ProductService
 
     private function findProductByName(string $name): Product
     {
-        return $this->productRepository->findByName($name);
+        $product = $this->productRepository->findByName($name);
+        if ($product === null) {
+            throw new ProductNotFoundExcpetion($name);
+        }
+
     }
 
     private function saveProduct(Product $product): bool

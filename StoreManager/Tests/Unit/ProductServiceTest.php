@@ -7,6 +7,7 @@ namespace StoreManager\Test\Unit;
 use StoreManager\Domain\Models\Product;
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Services\ProductService;
+use StoreManager\Domain\Exceptions\ProductNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 
@@ -38,6 +39,31 @@ class ProductServiceTest extends TestCase
 
         //Act & Assert (Ejecución & Validaciones)
         $this->assertTrue($service->incrementStock($productName, $increment));
+
+    }
+
+    public function testCuandoIncrementoElStockDeUnProductoInexistenteEntoncesSeLanzaExcepcion()
+    {
+        //Arrange (Configuración)
+        $productName = "Articulo Inexistente";
+        $increment = 5;
+
+        $mockRepository = Mockery::mock(ProductRepositoryInterface::class);
+
+        $mockRepository->shouldReceive('findByName')
+            ->with($productName)
+            ->once()
+            ->andReturn(null);
+
+        $service = new ProductService($mockRepository);
+
+        //Expectativas
+        $this->expectException(ProductNotFoundException::class);
+        $this->expectExceptionMessage("Producto no encontrado: $productName");
+
+
+        //Act (Ejecución)
+        $service->incrementStock($productName, $increment);
 
     }
 }
