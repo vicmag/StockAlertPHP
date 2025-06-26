@@ -2,6 +2,7 @@
 namespace StoreManager\Domain\Services;
 
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
+use StoreManager\Domain\Models\Product;
 
 class ProductService
 {
@@ -15,12 +16,27 @@ class ProductService
     public function incrementStock(string $productName, int $increment): bool
     {
         //Buscar el producto por nombre
-        $product = $this->productRepository->findByName($productName);
+        $product = $this->findProductByName($productName);
 
         //Incrementar el stock
-        $product->stock += $increment;
+        $this->updateStock($product, $increment);
 
         //Guardar los cambios
+        return $this->saveProduct($product);
+    }
+
+    private function updateStock(Product $product, int $increment): void
+    {
+        $product->stock += $increment;
+    }
+
+    private function findProductByName(string $name): Product
+    {
+        return $this->productRepository->findByName($name);
+    }
+
+    private function saveProduct(Product $product): bool
+    {
         return $this->productRepository->save($product);
     }
 
