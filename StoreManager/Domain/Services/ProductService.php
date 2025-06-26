@@ -14,8 +14,14 @@ class ProductService
 
     public function incrementStock(string $productName, int $increment): bool
     {
-        //Implementacion vacia para la fase roja
-        throw new \Exception("No implementado. Fase roja");
+        //Buscar el producto por nombre
+        $product = $this->productRepository->findByName($productName);
+
+        //Incrementar el stock
+        $product->stock += $increment;
+
+        //Guardar los cambios
+        return $this->productRepository->save($product);
     }
 
 }
