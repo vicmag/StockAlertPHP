@@ -12,7 +12,23 @@ use PHPUnit\Framework\TestCase;
 use Mockery;
 
 class ProductServiceTest extends TestCase
-{
+{   
+    private ProductRepositoryInterface $mockRepository;
+    private ProductService $service;
+
+    protected function setUp():void
+    {
+        parent::setUp();
+        $this->mockRepository = Mockery::mock(ProductRepositoryInterface::class);
+        $this->service = new ProductService($this->mockRepository);
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
     public function testCuandoIncrementoElStockEntoncesElProductoSeAlmacena()
     {
         //Arrange (Configuración)
@@ -24,21 +40,18 @@ class ProductServiceTest extends TestCase
         $product->name = $productName;
         $product->stock = $initialStock;
 
-        $mockRepository = Mockery::mock(ProductRepositoryInterface::class);
-
-        $mockRepository->shouldReceive('findByName')
+        $this->mockRepository->shouldReceive('findByName')
             ->with($productName)
             ->once()
             ->andReturn($product);
 
-        $mockRepository->shouldReceive('save')
+        $this->mockRepository->shouldReceive('save')
             ->with(Mockery::on(fn($product) => $product->stock === 15))
             ->once()
-            ->andReturn(true);
-        $service = new ProductService($mockRepository);
+            ->andReturn(true);        
 
         //Act & Assert (Ejecución & Validaciones)
-        $this->assertTrue($service->incrementStock($productName, $increment));
+        $this->assertTrue($this->service->incrementStock($productName, $increment));
 
     }
 
@@ -46,24 +59,54 @@ class ProductServiceTest extends TestCase
     {
         //Arrange (Configuración)
         $productName = "Articulo Inexistente";
-        $increment = 5;
+        $increment = 5;        
 
-        $mockRepository = Mockery::mock(ProductRepositoryInterface::class);
-
-        $mockRepository->shouldReceive('findByName')
+        $this->mockRepository->shouldReceive('findByName')
             ->with($productName)
             ->once()
             ->andReturn(null);
 
-        $service = new ProductService($mockRepository);
 
         //Expectativas
         $this->expectException(ProductNotFoundException::class);
-        $this->expectExceptionMessage("Producto no encontrado: $productName");
+        $this->expectExceptionMessage("Producto no encontrado");
+        $this->mockRepository->shouldNotReceive('save');
 
 
         //Act (Ejecución)
-        $service->incrementStock($productName, $increment);
+        $this->service->incrementStock($productName, $increment);
 
+    }
+
+    public function testCuandoElIncrementoEsMenorACeroEntoncesSeLanzaExcepcion()
+    {
+        //Arrange (Configuración)
+        $productName = "Camiseta";
+        $increment = -5;
+        
+        //Expectativas
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("El incremento debe ser un valor positivo.");
+
+        //Act (Ejecución)
+        $this->service->incrementStock($productName, $increment);
+
+ 
+    }
+
+    public function testCuandoElIncrementoEsCeroEntoncesSeLanzaExcepcion()
+    {
+        //Arrange (Configuración)
+        $productName = "Camiseta";
+        $increment = 0;
+        
+        //Expectativas
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("El incremento debe ser un valor positivo.");
+
+        //Act (Ejecución)
+        $this->service->incrementStock($productName, $increment);
+
+ 
     }
 }
