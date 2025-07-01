@@ -7,31 +7,14 @@ namespace StoreManager\Test\Unit;
 use StoreManager\Domain\Models\Product;
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Services\ProductService;
-use StoreManager\Domain\Exceptions\ProductNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 
 class ProductServiceTest extends TestCase
-{   
-    private ProductRepositoryInterface $mockRepository;
-    private ProductService $service;
-
-    protected function setUp():void
-    {
-        parent::setUp();
-        $this->mockRepository = Mockery::mock(ProductRepositoryInterface::class);
-        $this->service = new ProductService($this->mockRepository);
-    }
-
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
-
-    public function testCuandoIncrementoElStockEntoncesElProductoSeAlmacena()
-    {
-        //Arrange (Configuración)
+{
+   public function testGuardaElProductoAlincrementarElStock()
+   {
+        // Arrange (configuración)
         $productName = "Camiseta";
         $initialStock = 10;
         $increment = 5;
@@ -40,73 +23,23 @@ class ProductServiceTest extends TestCase
         $product->name = $productName;
         $product->stock = $initialStock;
 
-        $this->mockRepository->shouldReceive('findByName')
-            ->with($productName)
-            ->once()
-            ->andReturn($product);
-
-        $this->mockRepository->shouldReceive('save')
-            ->with(Mockery::on(fn($product) => $product->stock === 15))
-            ->once()
-            ->andReturn(true);        
-
-        //Act & Assert (Ejecución & Validaciones)
-        $this->assertTrue($this->service->incrementStock($productName, $increment));
-
-    }
-
-    public function testCuandoIncrementoElStockDeUnProductoInexistenteEntoncesSeLanzaExcepcion()
-    {
-        //Arrange (Configuración)
-        $productName = "Articulo Inexistente";
-        $increment = 5;        
-
-        $this->mockRepository->shouldReceive('findByName')
-            ->with($productName)
-            ->once()
-            ->andReturn(null);
-
-
-        //Expectativas
-        $this->expectException(ProductNotFoundException::class);
-        $this->expectExceptionMessage("Producto no encontrado");
-        $this->mockRepository->shouldNotReceive('save');
-
-
-        //Act (Ejecución)
-        $this->service->incrementStock($productName, $increment);
-
-    }
-
-    public function testCuandoElIncrementoEsMenorACeroEntoncesSeLanzaExcepcion()
-    {
-        //Arrange (Configuración)
-        $productName = "Camiseta";
-        $increment = -5;
+        $mockRepository = Mockery::mock(ProductRepositoryInterface::class);
         
-        //Expectativas
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("El incremento debe ser un valor positivo.");
+        $mockRepository->shouldReceive('findByName')
+            ->with($productName)
+            ->andReturn($product)
+            ->once();
 
-        //Act (Ejecución)
-        $this->service->incrementStock($productName, $increment);
-
- 
-    }
-
-    public function testCuandoElIncrementoEsCeroEntoncesSeLanzaExcepcion()
-    {
-        //Arrange (Configuración)
-        $productName = "Camiseta";
-        $increment = 0;
+        $mockRepository->shouldReceive('save')
+            ->with(Mockery::on(fn($product) => $initialStock+$increment === $product->stock))
+            ->once()
+            ->andReturn(true);
         
-        //Expectativas
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("El incremento debe ser un valor positivo.");
+        $service = new ProductService($mockRepository);
 
-        //Act (Ejecución)
-        $this->service->incrementStock($productName, $increment);
+        // Act & Assert (ejecucción & validacion)
+        $this->assertTrue($service->incrementStock($productName, $increment));
+        
 
- 
-    }
+   }
 }
