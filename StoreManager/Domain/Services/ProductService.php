@@ -13,9 +13,11 @@ class ProductService
         $this->productRepository = $productRepository;
     }    
 
-    public function incrementStock(string $product, int $increment):bool
+    public function incrementStock(string $productName, int $increment):bool
     {
-        // Implementación vacía. Fase Roja
-        throw new \RuntimeException('Método no implementado. Fase Roja');
+        // Implementación de la fase verde
+        $product = $this->productRepository->findByName($productName);
+        $product->stock += $increment;
+        return $this->productRepository->save($product);
     }
 }
