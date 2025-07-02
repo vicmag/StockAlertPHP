@@ -40,6 +40,5 @@ class ProductServiceTest extends TestCase
         // Act & Assert (ejecucción & validacion)
         $this->assertTrue($service->incrementStock($productName, $increment));
         
-
    }
 }
