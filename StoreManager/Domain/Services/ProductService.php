@@ -14,7 +14,9 @@ class ProductService
 
     public function incrementStock(string $productName, int $increment) : bool
     {
-        //Sin implementar. Fase Roja
-       throw new \Exception("Método no implementado");
+        //Fase Verde
+        $product = $this->repository->findByName($productName);
+        $product->stock += $increment;
+        return $this->repository->save($product);
     }
 }
