@@ -15,8 +15,18 @@ class ProductService
     public function incrementStock(string $productName, int $increment) : bool
     {
         //Fase Verde
-        $product = $this->repository->findByName($productName);
+        $product = $this->findProductByName($productName);
         $product->stock += $increment;
+        return $this->saveProduct($product);
+    }
+
+    private function findProductByName($productName){
+        return $this->repository->findByName($productName);
+    }
+ 
+    private function saveProduct($product){
         return $this->repository->save($product);
     }
+
+
 }
