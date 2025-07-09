@@ -1,5 +1,4 @@
 <?php
-
 namespace StoreManager\Domain\Models;
 
 class Product

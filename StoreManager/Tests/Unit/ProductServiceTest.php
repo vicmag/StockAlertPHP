@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace StoreManager\Test\Unit;
+namespace StoreManager\Tests\Unit;
 
 use StoreManager\Domain\Models\Product;
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Services\ProductService;
-use StoreManager\Domain\Exceptions\ProductNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 
-class ProductServiceTest extends TestCase
-{
-   public function testGuardaElProductoAlincrementarElStock()
-   {
-        // Arrange (configuración)
-        $productName = "Camiseta";
+class ProductServiceTest extends TestCase{
+    public function testGuardaCorrectamenteAlIncrementarElStock()
+    {
+        //Estructura AAA
+        //Arrange (Configuración)
+        $productName = 'Camiseta';
         $initialStock = 10;
         $increment = 5;
 
@@ -25,43 +24,25 @@ class ProductServiceTest extends TestCase
         $product->stock = $initialStock;
 
         $mockRepository = Mockery::mock(ProductRepositoryInterface::class);
-        
+
+        //Comportamiento del mock (Expectativas)
         $mockRepository->shouldReceive('findByName')
             ->with($productName)
             ->andReturn($product)
             ->once();
 
         $mockRepository->shouldReceive('save')
-            ->with(Mockery::on(fn($product) => $initialStock+$increment === $product->stock))
-            ->once()
-            ->andReturn(true);
-        
-        $service = new ProductService($mockRepository);
-
-        // Act & Assert (ejecucción & validacion)
-        $this->assertTrue($service->incrementStock($productName, $increment));
-        
-   }
-
-   public function testLanzaExcepcionCuandoElProductoNoExiste(){
-        // Arrange (configuración)
-        $productName = "Artículo Inexistente";
-        $increment = 5;
-
-        $mockRepository = Mockery::mock(ProductRepositoryInterface::class);
-        
-        $mockRepository->shouldReceive('findByName')
-            ->with($productName)
-            ->andReturn(null)
+            ->with(Mockery::on(fn($product) => $product->stock === $initialStock + $increment ))
+            ->andReturn(true)
             ->once();
-        
+
         $service = new ProductService($mockRepository);
 
-        $this->expectException(ProductNotFoundException::class);
-        $this->expectExceptionMessage("Producto no encontrado: $productName");
+        //Act & Assert (Ejecución & Validación)
+        $this->assertTrue($service->incrementStock($productName, $increment));
+        Mockery::close();
 
-        // Act (Ejecución)
-        $service->incrementStock($productName, $increment);
 
-   }
+    }
+
 }

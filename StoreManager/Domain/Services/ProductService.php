@@ -1,46 +1,20 @@
 <?php
-
 namespace StoreManager\Domain\Services;
 
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
-use StoreManager\Domain\Models\Product;
-use StoreManager\Domain\Exceptions\ProductNotFoundException;
 
 class ProductService
 {
-    private $productRepository;
+    private ProductRepositoryInterface $repository;
 
-    public function __construct(ProductRepositoryInterface $productRepository)
+    public function __construct(ProductRepositoryInterface $repository)
     {
-        $this->productRepository = $productRepository;
-    }    
-
-    public function incrementStock(string $productName, int $increment):bool
-    {
-        // Implementación de la fase verde
-        $product = $this->findProductByName($productName);
-        $this->updateStock($product, $increment);
-        return $this->saveProduct($product);
+        $this->repository = $repository;
     }
 
-    private function updateStock(Product $product, int $increment): void
+    public function incrementStock(string $productName, int $increment) : bool
     {
-        $product->stock += $increment;
+        //Sin implementar. Fase Roja
+       throw new \Exception("Método no implementado");
     }
-
-    private function findProductByName(string $productName): ?Product
-    {
-        $product = $this->productRepository->findByName($productName);
-        if ($product === null){
-            throw new ProductNotFoundException($productName);
-        }
-        return $this->productRepository->findByName($productName);
-    }
-
-    private function saveProduct(Product $product): bool
-    {
-        return $this->productRepository->save($product);
-    }
-
-
 }
