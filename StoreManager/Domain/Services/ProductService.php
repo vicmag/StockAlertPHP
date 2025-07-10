@@ -2,6 +2,7 @@
 namespace StoreManager\Domain\Services;
 
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
+use StoreManager\Domain\Exceptions\ProductNotFoundException;
 
 class ProductService
 {
@@ -14,14 +15,26 @@ class ProductService
 
     public function incrementStock(string $productName, int $increment) : bool
     {
-        //Fase Verde
+        
+        $this->validateIncrement($increment);
         $product = $this->findProductByName($productName);
         $product->stock += $increment;
         return $this->saveProduct($product);
     }
 
+    private function validateIncrement(int $increment): void
+    {
+        if ($increment <=0){ 
+            throw new  \InvalidArgumentException("El incremento debe ser positivo");
+        }
+    }
+
     private function findProductByName($productName){
-        return $this->repository->findByName($productName);
+        $product = $this->repository->findByName($productName);
+        if ($product === null){
+            throw new ProductNotFoundException($productName);
+        }
+        return $product;
     }
  
     private function saveProduct($product){
