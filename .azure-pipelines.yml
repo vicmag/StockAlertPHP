@@ -13,12 +13,11 @@ jobs:
       - task: Docker@2
         displayName: 'Build Docker Image'
         inputs:
-          containerRegistry: 'DockerHubConnection' # si lo vas a subir después
-          repository: 'phalcon-tdd'
-          Dockerfile: '**/Dockerfile'
           command: 'build'
+          Dockerfile: '**/Dockerfile'
           tags: |
-            latest
+            phalcon-tdd:latest
+
 
       - script: |
           docker run --rm -v $(Build.SourcesDirectory):/workspace -w /workspace phalcon-tdd composer install
