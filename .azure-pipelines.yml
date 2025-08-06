@@ -4,16 +4,26 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-  - task: UsePHPVersion@0
-    inputs:
-      version: '8.2' # o la versión que usas en local
+jobs:
+  - job: buildAndTest
+    displayName: Build y pruebas con Docker
+    steps:
+      - checkout: self
 
-  - script: |
-      php -v
-      composer install
-    displayName: 'Instalar dependencias'
+      - task: Docker@2
+        displayName: 'Build Docker Image'
+        inputs:
+          containerRegistry: 'DockerHubConnection' # si lo vas a subir después
+          repository: 'phalcon-tdd'
+          Dockerfile: '**/Dockerfile'
+          command: 'build'
+          tags: |
+            latest
 
-  - script: |
-      ./vendor/bin/phpunit --configuration phpunit.xml
-    displayName: 'Ejecutar pruebas con PHPUnit'
+      - script: |
+          docker run --rm -v $(Build.SourcesDirectory):/workspace -w /workspace phalcon-tdd composer install
+        displayName: 'Instalar dependencias en contenedor'
+
+      - script: |
+          docker run --rm -v $(Build.SourcesDirectory):/workspace -w /workspace phalcon-tdd ./vendor/bin/phpunit
+        displayName: 'Ejecutar pruebas en contenedor'
