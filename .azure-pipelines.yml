@@ -1,0 +1,19 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UsePHPVersion@0
+    inputs:
+      version: '8.2' # o la versión que usas en local
+
+  - script: |
+      php -v
+      composer install
+    displayName: 'Instalar dependencias'
+
+  - script: |
+      ./vendor/bin/phpunit --configuration phpunit.xml
+    displayName: 'Ejecutar pruebas con PHPUnit'
