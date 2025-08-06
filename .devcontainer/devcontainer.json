@@ -1,0 +1,14 @@
+{
+  "name": "PHP + Python Dev Container",
+  "dockerFile": "Dockerfile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "junstyle.php-cs-fixer",
+        "ms-python.python"
+      ]
+    }
+  },
+  "remoteUser": "root"
+}
