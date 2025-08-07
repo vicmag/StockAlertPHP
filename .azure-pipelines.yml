@@ -13,14 +13,9 @@ jobs:
     steps:
       - checkout: self
 
-      - task: Docker@2
-        displayName: 'Build Docker Image'
-        inputs:
-          command: 'build'
-          Dockerfile: '.devcontainer/Dockerfile'
-          tags: |
-            phalcon-tdd:latest
-
+      - script: |
+          docker build -t phalcon-tdd:latest -f .devcontainer/Dockerfile .
+        displayName: 'Construir imagen Docker'
 
       - script: |
           docker run --rm -v $(Build.SourcesDirectory):/workspace -w /workspace phalcon-tdd composer install
@@ -29,3 +24,4 @@ jobs:
       - script: |
           docker run --rm -v $(Build.SourcesDirectory):/workspace -w /workspace phalcon-tdd ./vendor/bin/phpunit
         displayName: 'Ejecutar pruebas en contenedor'
+
