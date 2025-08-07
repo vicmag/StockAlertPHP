@@ -36,5 +36,5 @@ jobs:
           docker run --rm \
             -v $(Build.SourcesDirectory):/workspace \
             -w /workspace/StoreManager \
-            phalcon-tdd ./vendor/bin/phpunit Tests
+            phalcon-tdd ./vendor/bin/phpunit --no-coverage Tests
         displayName: 'Ejecutar pruebas con PHPUnit'
