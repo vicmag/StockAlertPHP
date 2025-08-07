@@ -2,7 +2,10 @@ trigger:
   - development
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Default
+  demands:
+    - agent.name -equals NOMBRE_DE_TU_AGENT
+
 
 jobs:
   - job: buildAndTest
