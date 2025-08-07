@@ -1,5 +1,7 @@
-trigger:
-  - development
+# .azure-pipelines.yml
+
+# trigger:  # <-- comentado para ejecución manual
+#   - development
 
 pool:
   name: Default
@@ -20,5 +22,19 @@ jobs:
           docker run --rm \
             -v $(Build.SourcesDirectory):/workspace \
             -w /workspace \
-            phalcon-tdd sh -c "composer install && ./vendor/bin/phpunit StoreManager/Tests"
-        displayName: 'Instalar dependencias y ejecutar pruebas'
+            phalcon-tdd composer install
+        displayName: 'Instalar dependencias en contenedor'
+
+      - script: |
+          docker run --rm \
+            -v $(Build.SourcesDirectory):/workspace \
+            -w /workspace \
+            phalcon-tdd ls -la vendor/mockery/mockery
+        displayName: 'Verificar instalación de Mockery'
+
+      - script: |
+          docker run --rm \
+            -v $(Build.SourcesDirectory):/workspace \
+            -w /workspace \
+            phalcon-tdd ./vendor/bin/phpunit StoreManager/Tests
+        displayName: 'Ejecutar pruebas con PHPUnit'
