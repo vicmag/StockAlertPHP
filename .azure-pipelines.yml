@@ -6,7 +6,6 @@ pool:
   demands:
     - agent.name -equals iMac
 
-
 jobs:
   - job: buildAndTest
     displayName: Build y pruebas con Docker
@@ -18,10 +17,8 @@ jobs:
         displayName: 'Construir imagen Docker'
 
       - script: |
-          docker run --rm -v $(Build.SourcesDirectory):/workspace -w /workspace phalcon-tdd composer install
-        displayName: 'Instalar dependencias en contenedor'
-
-      - script: |
-          docker run --rm -v $(Build.SourcesDirectory):/workspace -w /workspace phalcon-tdd ./vendor/bin/phpunit StoreManager/Tests
-        displayName: 'Ejecutar pruebas en contenedor'
-
+          docker run --rm \
+            -v $(Build.SourcesDirectory):/workspace \
+            -w /workspace \
+            phalcon-tdd sh -c "composer install && ./vendor/bin/phpunit StoreManager/Tests"
+        displayName: 'Instalar dependencias y ejecutar pruebas'
