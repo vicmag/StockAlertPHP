@@ -17,7 +17,7 @@ jobs:
         displayName: 'Build Docker Image'
         inputs:
           command: 'build'
-          Dockerfile: '**/Dockerfile'
+          Dockerfile: '.devcontainer/Dockerfile'
           tags: |
             phalcon-tdd:latest
 
