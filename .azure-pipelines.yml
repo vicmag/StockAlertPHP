@@ -2,6 +2,13 @@
 
 # trigger:
 #   - development
+trigger: none
+pr: none
+
+parameters:
+- name: branchExecution
+  type: string
+  default: 'development'
 
 pool:
   name: Default
