@@ -36,5 +36,7 @@ jobs:
           docker run --rm \
             -v $(Build.SourcesDirectory):/workspace \
             -w /workspace/StoreManager \
+            -e XDEBUG_MODE=coverage \
             phalcon-tdd ./vendor/bin/phpunit Tests
         displayName: 'Ejecutar pruebas con PHPUnit'
+
