@@ -8,17 +8,13 @@
         "monolog/monolog": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0",
+        "codeception/codeception": "^5.0",
+        "codeception/module-asserts": "^3.0",
         "mockery/mockery": "^1.5"
     },
     "autoload": {
         "psr-4": {
             "StoreManager\\": "./"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "StoreManager\\Tests\\": "Tests/"
         }
     },
     "config": {
