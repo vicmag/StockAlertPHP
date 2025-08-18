@@ -10,7 +10,8 @@
     "require-dev": {
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
-        "mockery/mockery": "^1.5"
+        "mockery/mockery": "^1.5",
+        "codeception/module-phpbrowser": "*"
     },
     "autoload": {
         "psr-4": {
@@ -27,4 +28,4 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true
-  }
+}
