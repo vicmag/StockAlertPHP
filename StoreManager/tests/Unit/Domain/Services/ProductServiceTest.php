@@ -13,10 +13,6 @@ class ProductServiceTest extends Unit
 {
     protected \Tests\Support\UnitTester $tester;
 
-    protected function _after()
-    {
-        Mockery::close();
-    }
 
     public function testIncreaseStockShouldIncrementProductStock()
     {
@@ -50,6 +46,8 @@ class ProductServiceTest extends Unit
 
         // Assert
         $this->assertTrue($result);
+
+        Mockery::close();
     }
 }
 ?>
