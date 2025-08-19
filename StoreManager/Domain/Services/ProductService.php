@@ -15,8 +15,14 @@ class ProductService
     
     public function increaseStock(string $productName, int $amount): bool
     {
-        // Implementación vacía para fase roja
-        throw new \RuntimeException('Método no implementado');
+        // 1. Buscar el producto por nombre
+        $product = $this->productRepository->findByName($productName);
+        
+        // 2. Incrementar el stock con la cantidad especificada
+        $product->stock += $amount;
+        
+        // 3. Guardar los cambios y retornar el resultado
+        return $this->productRepository->save($product);
     }
 }
 ?>
