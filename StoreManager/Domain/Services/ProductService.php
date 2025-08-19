@@ -15,13 +15,24 @@ class ProductService
     
     public function increaseStock(string $productName, int $amount): bool
     {
-        // 1. Buscar el producto por nombre
-        $product = $this->productRepository->findByName($productName);
+        $product = $this->findProductByName($productName);
+        $this->updateStock($product, $amount);
         
-        // 2. Incrementar el stock con la cantidad especificada
+        return $this->persistChanges($product);
+    }
+    
+    private function findProductByName(string $name): Product
+    {
+        return $this->productRepository->findByName($name);
+    }
+    
+    private function updateStock(Product $product, int $amount): void
+    {
         $product->stock += $amount;
-        
-        // 3. Guardar los cambios y retornar el resultado
+    }
+    
+    private function persistChanges(Product $product): bool
+    {
         return $this->productRepository->save($product);
     }
 }
