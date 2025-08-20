@@ -16,14 +16,14 @@ class ProductService
     
     public function increaseStock(string $productName, int $amount): bool
     {
-        $product = $this->findProductByName($productName);
+        $product = $this->findProductOrFail($productName);
         
         $this->updateStock($product, $amount);
         
         return $this->persistChanges($product);
     }
     
-    private function findProductByName(string $name): Product
+    private function findProductOrFail(string $name): Product
     {
         $product = $this->productRepository->findByName($name);
         // Implementación guiada por la prueba
