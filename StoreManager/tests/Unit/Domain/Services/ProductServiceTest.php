@@ -7,6 +7,7 @@ use StoreManager\Domain\Models\Product;
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Services\ProductService;
 use StoreManager\Domain\Exceptions\ProductNotFoundException;
+use StoreManager\Domain\Exceptions\InvalidStockOperationException;
 use Mockery;
 use Codeception\Test\Unit;
 

@@ -4,6 +4,7 @@ namespace StoreManager\Domain\Services;
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Models\Product;
 use StoreManager\Domain\Exceptions\ProductNotFoundException;
+use StoreManager\Domain\Exceptions\InvalidStockOperationException;
 
 class ProductService
 {
@@ -35,6 +36,13 @@ class ProductService
     
     private function updateStock(Product $product, int $amount): void
     {
+        // Implementación guiada por la prueba
+        if (($product->stock + $amount) < 0) {
+            throw new InvalidStockOperationException(
+                'No hay suficiente stock para realizar esta operación'
+            );
+        }
+
         $product->stock += $amount;
     }
     
