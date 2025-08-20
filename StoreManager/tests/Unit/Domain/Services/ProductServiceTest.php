@@ -97,5 +97,35 @@ class ProductServiceTest extends Unit
         // Act
         $this->service->increaseStock($productName, $incrementAmount);
     }
+
+    public function testIncreaseStockShouldThrowExceptionWhenNegativeAmountWouldMakeStockNegative()
+    {
+        // Arrange
+        $productName = 'Camiseta';
+        $initialStock = 3;
+        $negativeAmount = -5; // Valor negativo que haría el stock negativo
+        
+        // Configurar producto mock con stock bajo
+        $mockProduct = new Product();
+        $mockProduct->name = $productName;
+        $mockProduct->stock = $initialStock;
+        
+        // Configurar expectativas del mock
+        $this->mockRepo->shouldReceive('findByName')
+            ->with($productName)
+            ->once()
+            ->andReturn($mockProduct);
+            
+        // El save no debería llamarse si la operación es inválida
+        $this->mockRepo->shouldReceive('save')
+            ->never();
+        
+        // Expectativa de excepción
+        $this->expectException(InvalidStockOperationException::class);
+        $this->expectExceptionMessage('No hay suficiente stock para realizar esta operación');
+
+        // Act
+        $this->service->increaseStock($productName, $negativeAmount);
+    }
 }
 ?>
