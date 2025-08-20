@@ -10,3 +10,14 @@ actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+
+coverage:
+    enabled: true
+    include:
+        - src/*
+    exclude:
+        - tests/*
+        - vendor/*
+    # Umbrales mínimos (opcional)
+    low_limit: 70
+    high_limit: 90
