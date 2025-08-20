@@ -14,6 +14,32 @@ class ProductServiceTest extends Unit
 {
     protected \Tests\Support\UnitTester $tester;
 
+    /** @var Mockery\MockInterface|ProductRepositoryInterface */
+    private $mockRepo;
+    
+    /** @var ProductService */
+    private $service;
+
+    /**
+     * Configuración común para todos los tests
+     */
+    protected function _before()
+    {
+        // 1. Crear el mock del repositorio (común para todos los tests)
+        $this->mockRepo = Mockery::mock(ProductRepositoryInterface::class);
+        
+        // 2. Inicializar el servicio con el mock
+        $this->service = new ProductService($this->mockRepo);
+    }
+
+    /**
+     * Limpieza después de cada test
+     */
+    protected function _after()
+    {
+        Mockery::close();
+    }
+
 
     public function testIncreaseStockShouldIncrementProductStock()
     {
@@ -27,28 +53,25 @@ class ProductServiceTest extends Unit
         $mockProduct->stock = $initialStock;
         
         // Mock del repositorio
-        $mockRepo = Mockery::mock(ProductRepositoryInterface::class);
-        $mockRepo->shouldReceive('findByName')
+        $this->mockRepo->shouldReceive('findByName')
             ->with($productName)
             ->once()
             ->andReturn($mockProduct);
             
-        $mockRepo->shouldReceive('save')
+        $this->mockRepo->shouldReceive('save')
             ->with(Mockery::on(function ($product) use ($initialStock, $incrementAmount) {
                 return $product->stock === ($initialStock + $incrementAmount);
             }))
             ->once()
             ->andReturn(true);
         
-        $service = new ProductService($mockRepo);
 
         // Act
-        $result = $service->increaseStock($productName, $incrementAmount);
+        $result = $this->service->increaseStock($productName, $incrementAmount);
 
         // Assert
         $this->assertTrue($result);
 
-        Mockery::close();
     }
 
     public function testIncreaseStockShouldThrowExceptionWhenProductNotFound()
@@ -58,24 +81,21 @@ class ProductServiceTest extends Unit
         $incrementAmount = 5;
         
         // Mock del repositorio que retorna null (producto no encontrado)
-        $mockRepo = Mockery::mock(ProductRepositoryInterface::class);
-        $mockRepo->shouldReceive('findByName')
+        $this->mockRepo->shouldReceive('findByName')
             ->with($productName)
             ->once()
             ->andReturn(null);
             
         // El método save nunca debería llamarse
-        $mockRepo->shouldReceive('save')
+        $this->mockRepo->shouldReceive('save')
             ->never();
-        
-        $service = new ProductService($mockRepo);
 
-        // Expectativas de excepción - ESTA EXCEPCIÓN NO EXISTE TODAVÍA
+        // Expectativas de excepción
         $this->expectException(ProductNotFoundException::class);
         $this->expectExceptionMessage("Producto '{$productName}' no encontrado");
 
         // Act
-        $service->increaseStock($productName, $incrementAmount);
+        $this->service->increaseStock($productName, $incrementAmount);
     }
 }
 ?>
