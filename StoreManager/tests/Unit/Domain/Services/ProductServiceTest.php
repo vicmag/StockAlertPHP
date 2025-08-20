@@ -70,14 +70,12 @@ class ProductServiceTest extends Unit
         
         $service = new ProductService($mockRepo);
 
-        // Expectativas de excepción
+        // Expectativas de excepción - ESTA EXCEPCIÓN NO EXISTE TODAVÍA
         $this->expectException(ProductNotFoundException::class);
         $this->expectExceptionMessage("Producto '{$productName}' no encontrado");
 
         // Act
         $service->increaseStock($productName, $incrementAmount);
-
-        Mockery::close();
     }
 }
 ?>

@@ -3,6 +3,7 @@ namespace StoreManager\Domain\Services;
 
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Models\Product;
+use StoreManager\Domain\Exceptions\ProductNotFoundException;
 
 class ProductService
 {
@@ -16,6 +17,7 @@ class ProductService
     public function increaseStock(string $productName, int $amount): bool
     {
         $product = $this->findProductByName($productName);
+        
         $this->updateStock($product, $amount);
         
         return $this->persistChanges($product);
@@ -23,7 +25,13 @@ class ProductService
     
     private function findProductByName(string $name): Product
     {
-        return $this->productRepository->findByName($name);
+        $product = $this->productRepository->findByName($name);
+        if ($product === null) {
+            throw new ProductNotFoundException(
+                "Producto '{$productName}' no encontrado"
+            );
+        }
+        return $product;
     }
     
     private function updateStock(Product $product, int $amount): void
