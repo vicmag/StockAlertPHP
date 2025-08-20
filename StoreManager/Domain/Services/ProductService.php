@@ -26,10 +26,9 @@ class ProductService
     private function findProductByName(string $name): Product
     {
         $product = $this->productRepository->findByName($name);
+        // Implementación guiada por la prueba
         if ($product === null) {
-            throw new ProductNotFoundException(
-                "Producto '{$productName}' no encontrado"
-            );
+            throw new ProductNotFoundException("Producto '{$name}' no encontrado");
         }
         return $product;
     }
