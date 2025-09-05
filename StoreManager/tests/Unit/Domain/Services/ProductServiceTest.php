@@ -6,6 +6,8 @@ namespace StoreManager\Tests\Unit\Domain\Services;
 use StoreManager\Domain\Models\Product;
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Services\ProductService;
+use StoreManager\Domain\Exceptions\ProductNotFoundException;
+
 use Mockery;
 use Codeception\Test\Unit;
 
@@ -44,6 +46,37 @@ class ProductServiceTest extends Unit
 
         //Assert (validación)
         $this->assertTrue($result);
+        Mockery::close();
+       
+    }
+
+    public function testCuandoElProductoNoexisteEntoncesLanzaExcepción()
+    {
+        //Arrange (configuración)
+        $productName = 'Inexistente';
+        $increment = 5;
+
+        $db = Mockery::mock(ProductRepositoryInterface::class);
+
+        //Definiendo el comportamiento de los mocks (stubs particularment expectativas)
+        $db->shouldReceive('findByName')
+            ->with($productName)
+            ->andReturn(null)
+            ->once();
+        
+        $db->shouldReceive('save')
+            ->never();
+
+        $service = new ProductService($db);
+
+        $this->expectException(ProductNotFoundException::class);
+        $this->expectExceptionMessage("Producto '{$productName}' no encontrado");
+
+
+        //Act (ejecución)
+        $service->incrementStock($productName, $increment);
+
+        //Assert (validación)
         Mockery::close();
        
     }

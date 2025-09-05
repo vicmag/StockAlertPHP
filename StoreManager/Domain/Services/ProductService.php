@@ -22,7 +22,7 @@ class ProductService
         return $this->saveProduct($product);
     }
 
-    private function findProduct($productName): Product
+    private function findProduct($productName): ?Product
     {
         return $this->db->findByName($productName);
     }
