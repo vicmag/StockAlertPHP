@@ -23,6 +23,8 @@ class ProductServiceTest extends Unit
         $product->stock = $initialStock;
 
         $db = Mockery::mock(ProductRepositoryInterface::class);
+
+        //Definiendo el comportamiento de los mocks (stubs particularment expectativas)
         $db->shouldReceive('findByName')
             ->with($productName)
             ->andReturn($product)
@@ -42,7 +44,7 @@ class ProductServiceTest extends Unit
 
         //Assert (validación)
         $this->assertTrue($result);
-        MOckery::close();
+        Mockery::close();
        
     }
 }
