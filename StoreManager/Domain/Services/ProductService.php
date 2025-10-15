@@ -14,7 +14,9 @@ class ProductService
 
     public function incrementaStock(string $nombre, int $increment): bool
     {
-        //Implementación vacia. Fase Roja
-        return true;
+        //Fase Verde
+        $product = $this->bd->findByName($nombre);
+        $product->stock += $increment;
+        return $this->bd->save($product);
     }
 }
