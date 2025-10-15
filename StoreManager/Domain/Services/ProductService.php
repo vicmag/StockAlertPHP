@@ -21,7 +21,7 @@ class ProductService
         return $this->guardaProducto($product);
     }
 
-    private function buscaPorNombre(string $nombre): Product
+    private function buscaPorNombre(string $nombre): ?Product
     {
         return $this->bd->findByName($nombre);
     }
