@@ -3,6 +3,7 @@ namespace StoreManager\Domain\Services;
 
 use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 use StoreManager\Domain\Models\Product;
+use StoreManager\Domain\Exceptions\ProductNotFoundException;
 
 class ProductService
 {   
@@ -22,8 +23,12 @@ class ProductService
     }
 
     private function buscaPorNombre(string $nombre): ?Product
-    {
-        return $this->bd->findByName($nombre);
+    {   
+        $product = $this->bd->findByName($nombre);
+        if ($product === null){
+            throw new ProductNotFoundException("Producto no encontrado");
+        }
+        return $product;
     }
 
     private function guardaProducto($product)
