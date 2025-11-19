@@ -12,6 +12,21 @@ use Mockery;
 
 class ProductServiceTest extends Unit
 {
+   
+    private $mockDB;
+    private $servicio;
+
+    protected function _before()
+    {
+        $this->mockDB = Mockery::mock(ProductRepositoryInterface::class);
+        $this->servicio = new ProductService($this->mockDB);
+    }
+
+    protected function _after()
+    {
+        Mockery::close();
+    }
+
     public function testCuandoIncrementamosElStockEntoncesSeAlmacenaCorrectamente()
     {
         //Arrange (Configuración)
@@ -23,28 +38,26 @@ class ProductServiceTest extends Unit
         $product->nombre = $nombreProducto;
         $product->stock = $stockInicial;
 
-        $mockDB = Mockery::mock(ProductRepositoryInterface::class);
+        
         //expectativas (stubs)
-        $mockDB->shouldReceive('findByName')
+        $this->mockDB->shouldReceive('findByName')
             ->with($nombreProducto)
             ->andReturn($product)
             ->once();
 
-        $mockDB->shouldReceive('save')
+        $this->mockDB->shouldReceive('save')
             ->with(Mockery::on(function($product) use ($stockInicial,$incremento){
                 return $product->stock === ($stockInicial + $incremento);
             }))
             ->andReturn(true)
             ->once();
 
-        $servicio = new ProductService($mockDB);
-
         //Act (Ejecución)
-        $result = $servicio->incrementaStock($nombreProducto, $incremento);
+        $result = $this->servicio->incrementaStock($nombreProducto, $incremento);
         
         //Assert (Validación)
         $this->assertTrue($result);
-        Mockery::close();
+    
 
     }
 
@@ -54,28 +67,22 @@ class ProductServiceTest extends Unit
         $nombreProducto = 'ProductoInexistente';
         $incremento = 5;
 
-        //Implementación de BD para pruenas
-        $mockDB = Mockery::mock(ProductRepositoryInterface::class);
 
         //expectativas (stubs)
-        $mockDB->shouldReceive('findByName')
+        $this->mockDB->shouldReceive('findByName')
             ->with($nombreProducto)
             ->andReturn(null)
             ->once();
 
-        $mockDB->shouldReceive('save')
+        $this->mockDB->shouldReceive('save')
             ->never();
-
-        $servicio = new ProductService($mockDB);
 
         $this->expectException(ProductNotFoundException::class);
         $this->expectExceptionMessage("Producto no encontrado");
 
         //Act (Ejecución)
-        $servicio->incrementaStock($nombreProducto, $incremento);
+        $this->servicio->incrementaStock($nombreProducto, $incremento);
         
-        //Assert (Validación)
-        Mockery::close();
 
     }
 }
