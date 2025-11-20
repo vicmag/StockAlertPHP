@@ -3,6 +3,9 @@ declare(strict_type=1);
 
 namespace StorageManager\Test\Unit\Domain\Service;
 
+use StoreManager\Domain\Models\Product;
+use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
+use StoreManager\Domain\Services\ProductService;
 use Codeception\Test\Unit;
 use Mockery;
 
