@@ -5,16 +5,14 @@ use StoreManager\Domain\Interfaces\ProductRepositoryInterface;
 
 class ProductService
 {
-    private $bd;
+    private $db;
 
-    public function __construct(ProductRepositoryInterface $bd)
-    {
-        $this->bd = $bd;
+    public function __construct(ProductRepositoryInterface $db){
+        $this->db = $db;
     }
 
-    public function incrementStock(string $nombre, int $incremento) : bool
+    public function incrementStock(string $productName, int $increment): bool
     {
-        //Implementación vacia. Fase Roja
         return false;
     }
 }
