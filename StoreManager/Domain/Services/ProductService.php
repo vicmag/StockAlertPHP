@@ -13,6 +13,10 @@ class ProductService
 
     public function incrementStock(string $productName, int $increment): bool
     {
-        return false;
+        $product = $this->db->findByName($productName);
+
+        $product->stock += $increment;
+        
+        return $this->db->save($product);
     }
 }
